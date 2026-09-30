@@ -75,15 +75,19 @@ governance around them. Contributions welcome ([CONTRIBUTING](CONTRIBUTING.md)).
 - [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) — the standard for connecting agents to tools/data; read its **authorization** model before exposing tools.
 - [A2A (Agent2Agent) protocol](https://a2aproject.github.io/A2A/) — inter-agent communication; the backbone (and trust boundary) of multi-agent networks.
 
-## RAG, GraphRAG & retrieval
-- [Microsoft GraphRAG](https://github.com/microsoft/graphrag) — graph-based RAG: build a knowledge graph from text, then reason over it.
+- [Microsoft GraphRAG](https://github.com/microsoft/graphrag) — community-hierarchy GraphRAG (global + local search); powerful for corpus-wide synthesis but token-heavy (~77× naive RAG).
+- [LightRAG](https://github.com/HKUDS/LightRAG) — flat entity-relation GraphRAG; cheaper to index and *update* than community hierarchies.
+- [HippoRAG](https://github.com/OSU-NLP-Group/HippoRAG) — memory-inspired: OpenIE triples + Personalized PageRank for efficient **multi-hop** retrieval in one graph op.
+- [RAPTOR](https://github.com/parthsarthi03/raptor) — recursive embedding-cluster summaries into a hierarchical tree (abstraction levels, no explicit entities).
 - [Haystack](https://github.com/deepset-ai/haystack) — production RAG/search pipelines.
 - [RAGAS](https://github.com/explodinggradients/ragas) — evaluation for RAG (also in [eval](#evaluation-judges--verification)).
+- **[GraphRAG vs Vector RAG — comparison](https://aipractitioner.substack.com/p/graphrag-vs-vector-rag-better-retrieval)** — the decision rubric: real gaps are often <8%; **graphs augment, don't replace, vectors**. Start vector for simple facts; add a graph for multi-hop and corpus synthesis.
 - *Note:* similarity is not meaning — pair retrieval with an ontology/authority layer for correctness (see [knowledge graphs](#knowledge-graphs--ontologies)).
 
 ## Knowledge graphs & ontologies
 - [Neo4j](https://neo4j.com/) — the mainstream property-graph database; the backbone for control/evidence graphs.
 - [Graphiti](https://github.com/getzep/graphiti) — build real-time, temporally-aware knowledge graphs for agents.
+- [Automating KG population with an LLM](https://machinelearningmastery.com/automating-knowledge-graph-population-extracting-entities-and-triples-from-unstructured-text-with-an-llm/) — the practical *populate-the-graph* how-to: extract entities + triples as **SPOC quads** (subject-predicate-object-**context/provenance**) from unstructured text with a local LLM (JSON mode, temp 0, normalize, human-verify).
 - **Ontology / semantic layer** — the business-meaning layer that says what your terms mean and which source is authoritative; what RAG alone can't give you.
 
 ## Memory, second brain & enterprise memory
@@ -121,6 +125,8 @@ governance around them. Contributions welcome ([CONTRIBUTING](CONTRIBUTING.md)).
 
 ## Guardrails & protection
 - [GuardLayer](https://github.com/Lijithvmv/Guard-Layer) — layered input/output/tool-call security: prompt-injection defense, egress policy, session taint, tamper-evident audit log. Zero-dependency core.
+- [NVIDIA OpenShell](https://github.com/NVIDIA/OpenShell) — the safe **runtime** for agent fleets: **kernel-enforced** per-agent sandbox, every network egress passes a policy check, **credentials never reach the agent**, and **formally-verified policy changes** (a prover flags risky new access for human review). Containment at the kernel. *(Rust · Apache-2.0 · 12k★.)*
+- [shield-kya](https://github.com/The-Pixel-Boys/shield-kya) — a local **MCP "Know Your Agent" gate**: **Allow / Review / Deny** on every tool call, **receipts** on a live dashboard, and certification against an *Agent Trust Baseline*; PreToolUse hooks across many agent hosts.
 - [NVIDIA NeMo Guardrails](https://github.com/NVIDIA/NeMo-Guardrails) — programmable guardrails (Colang) for LLM apps.
 - [Guardrails AI](https://github.com/guardrails-ai/guardrails) — validators and structured-output enforcement.
 - [LLM Guard](https://github.com/protectai/llm-guard) — input/output scanners (injection, PII, toxicity).
@@ -137,6 +143,8 @@ governance around them. Contributions welcome ([CONTRIBUTING](CONTRIBUTING.md)).
 - [SPIFFE / SPIRE](https://github.com/spiffe/spire) — workload identity: short-lived, verifiable identities for services and agents.
 - **Non-human identity (NHI) for agents** — scope agents with least-privilege machine identities; distinguish **U2M** (agent acts for a user, permissions carry through) from **M2M** (agent acts as itself).
 - **Token vending / short-lived credentials** — never give an agent a standing, long-lived key.
+- [NIST NCCoE — Agentic AI Identity & Authorization](https://pages.nist.gov/nccoe-ai-identity/summary-of-comments.html) — the authoritative reference (600+ public comments): **trust anchors (persistent) vs ephemeral credentials (task-scoped)**, **task-scoped zero-trust authz** (decide at execution, not login), cryptographic **intent "flight plans"**, **deterministic — not LLM — authorization**, and delegation that stays cryptographically traceable to the human/org principal.
+- **The identity standards stack** — WIMSE · SPIFFE/SPIRE (workload id) · OAuth2 token-exchange / RAR (delegation + intent) · Cedar / OPA / NGAC (authz) · W3C VC/DID (cross-domain trust) · DPoP / mTLS (sender constraint) · OpenID AuthZEN (authz decisions) · SCITT (provenance).
 
 ## AI gateways & policy enforcement
 - [Portkey AI Gateway](https://github.com/Portkey-AI/gateway) — an open-source gateway: routing, guardrails, budgets, observability across providers.
@@ -156,6 +164,7 @@ governance around them. Contributions welcome ([CONTRIBUTING](CONTRIBUTING.md)).
 - [Langfuse](https://github.com/langfuse/langfuse) — open-source LLM observability, tracing, and evals.
 - [Arize Phoenix](https://github.com/Arize-ai/phoenix) — tracing and evaluation for LLM/agent apps.
 - [OpenLLMetry](https://github.com/traceloop/openllmetry) — OpenTelemetry-based instrumentation for LLM apps.
+- [FastAPI + OpenTelemetry](https://fastapi.tiangolo.com/advanced/opentelemetry/) — built-in OTel traces/metrics/logs for FastAPI services (set the OTLP endpoint; it instruments requests, dependencies, and exceptions) — the wiring for API/agent observability.
 - **OpenTelemetry GenAI semantic conventions** — log enough to *reconstruct a decision*: tool calls, arguments, model version, decision path.
 
 ## Audit, provenance & supply chain
@@ -172,6 +181,8 @@ governance around them. Contributions welcome ([CONTRIBUTING](CONTRIBUTING.md)).
 - [Simon Willison — prompt injection series](https://simonwillison.net/tags/prompt-injection/) — the clearest running commentary (jailbreak ≠ injection; the dual-LLM pattern).
 - [Embrace The Red (Johann Rehberger)](https://embracethered.com/blog/) — offense-first write-ups of real agent/LLM exploits.
 - [Greshake et al. — indirect prompt injection](https://arxiv.org/abs/2302.12173) · [Zou et al. — GCG](https://arxiv.org/abs/2307.15043) — foundational attack papers.
+- [GitHub — the Agentic Engineering System](https://github.com/resources/insights/agentic-engineering-system) — an operating model for org-wide agent adoption: Governance + Shared Knowledge + Customer Value; Define → Deliver → Detect; Director / Performer / Assessor.
+- [Anthropic — GLM-5.3 & the spread of advanced cyber capabilities](https://www.anthropic.com/research/glm-5-3-and-the-spread-of-advanced-cyber-capabilities) — open-weight models can be cheaply stripped of safeguards (refusal 95% → 6% via abliteration, ~$1,200); the case for putting safety in the **runtime**, not only the model.
 
 ---
 

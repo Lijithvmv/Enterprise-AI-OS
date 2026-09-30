@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.svg" alt="Enterprise AI OS — build it, run it, and keep it under control" width="100%">
+</p>
+
 # Enterprise AI OS [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 
 > **The operating system for enterprise AI — build it, run it, and keep it under control.** A curated

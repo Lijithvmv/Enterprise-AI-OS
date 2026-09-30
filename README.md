@@ -28,7 +28,7 @@ governance around them. Contributions welcome ([CONTRIBUTING](CONTRIBUTING.md)).
 [LLMs & serving](#llms--serving) ·
 [Agent frameworks & harnesses](#agent-frameworks--harnesses) ·
 [Multi-agent orchestration](#multi-agent-orchestration) ·
-[Protocols: MCP & A2A](#protocols-mcp--a2a) ·
+[Protocols: MCP, A2A & AG-UI](#protocols-mcp-a2a--ag-ui) ·
 [RAG, GraphRAG & retrieval](#rag-graphrag--retrieval) ·
 [Knowledge graphs & ontologies](#knowledge-graphs--ontologies) ·
 [Memory, second brain & enterprise memory](#memory-second-brain--enterprise-memory) ·
@@ -65,15 +65,17 @@ governance around them. Contributions welcome ([CONTRIBUTING](CONTRIBUTING.md)).
 - [Google ADK](https://github.com/google/adk-python) — Agent Development Kit: code-first agents with eval and deploy.
 - [LlamaIndex](https://github.com/run-llama/llama_index) — data framework + agent workflows over your data.
 - [Newton](https://github.com/Lijithvmv/newton) — a fully-local coding/project agent; a study in *harness* engineering for small models.
+- [open-dots](https://github.com/Anil-matcha/open-dots) — a self-hosted agent **workspace** (open alternative to OpenAI Dots / Meta Muse / Grok): Next.js + FastAPI, local-first storage, and a **deny-by-default action gateway with approval workflows** — a rare example of the control thesis baked into an end-user app. *(MIT · 4.8k★.)*
 
 ## Multi-agent orchestration
 - [Model orchestration patterns](https://www.anthropic.com/engineering/building-effective-agents) — Anthropic's "building effective agents": when to use workflows vs agents (essential reading before you orchestrate).
 - [OpenAI Swarm / Agents handoffs](https://github.com/openai/swarm) — minimal patterns for routing and specialist handoffs.
 - *(Orchestrator = the layer that decides what runs next: branches, retries, handoffs, shared state. Keep it explicit and inspectable.)*
 
-## Protocols: MCP & A2A
+## Protocols: MCP, A2A & AG-UI
 - [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) — the standard for connecting agents to tools/data; read its **authorization** model before exposing tools.
 - [A2A (Agent2Agent) protocol](https://a2aproject.github.io/A2A/) — inter-agent communication; the backbone (and trust boundary) of multi-agent networks.
+- [AG-UI protocol](https://github.com/ag-ui-protocol/ag-ui) — the **agent↔UI** layer: event-based streaming (31 event types, transport-agnostic) so any surface renders an agent's tokens, tool calls, reasoning, and shared state in real time. **1.0 (Sept 2026)**; native in LangChain, Claude Agent SDK, CrewAI, Pydantic AI. Completes the trio — **MCP** (agent↔tools) · **A2A** (agent↔agent) · **AG-UI** (agent↔user).
 
 - [Microsoft GraphRAG](https://github.com/microsoft/graphrag) — community-hierarchy GraphRAG (global + local search); powerful for corpus-wide synthesis but token-heavy (~77× naive RAG).
 - [LightRAG](https://github.com/HKUDS/LightRAG) — flat entity-relation GraphRAG; cheaper to index and *update* than community hierarchies.

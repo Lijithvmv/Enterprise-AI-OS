@@ -86,13 +86,13 @@ governance around them. Contributions welcome ([CONTRIBUTING](CONTRIBUTING.md)).
 - [HippoRAG](https://github.com/OSU-NLP-Group/HippoRAG) — memory-inspired: OpenIE triples + Personalized PageRank for efficient **multi-hop** retrieval in one graph op.
 - [RAPTOR](https://github.com/parthsarthi03/raptor) — recursive embedding-cluster summaries into a hierarchical tree (abstraction levels, no explicit entities).
 - [Haystack](https://github.com/deepset-ai/haystack) — production RAG/search pipelines.
-- [RAGAS](https://github.com/explodinggradients/ragas) — evaluation for RAG (also in [eval](#evaluation-judges--verification)).
+- [RAGAS](https://github.com/explodinggradients/ragas) — evaluation for RAG (also in [eval](#evaluation-judges--verification)). ⚠️ [telemetry on by default](#telemetry-check): opt out with `RAGAS_DO_NOT_TRACK=true`.
 - **[GraphRAG vs Vector RAG — comparison](https://aipractitioner.substack.com/p/graphrag-vs-vector-rag-better-retrieval)** — the decision rubric: real gaps are often <8%; **graphs augment, don't replace, vectors**. Start vector for simple facts; add a graph for multi-hop and corpus synthesis.
 - *Note:* similarity is not meaning — pair retrieval with an ontology/authority layer for correctness (see [knowledge graphs](#knowledge-graphs--ontologies)).
 
 ## Knowledge graphs & ontologies
 - [Neo4j](https://neo4j.com/) — the mainstream property-graph database; the backbone for control/evidence graphs.
-- [Graphiti](https://github.com/getzep/graphiti) — build real-time, temporally-aware knowledge graphs for agents.
+- [Graphiti](https://github.com/getzep/graphiti) — build real-time, temporally-aware knowledge graphs for agents. ⚠️ [telemetry on by default](#telemetry-check) (PostHog): `GRAPHITI_TELEMETRY_ENABLED=false`.
 - [Automating KG population with an LLM](https://machinelearningmastery.com/automating-knowledge-graph-population-extracting-entities-and-triples-from-unstructured-text-with-an-llm/) — the practical *populate-the-graph* how-to: extract entities + triples as **SPOC quads** (subject-predicate-object-**context/provenance**) from unstructured text with a local LLM (JSON mode, temp 0, normalize, human-verify).
 - **Ontology / semantic layer** — the business-meaning layer that says what your terms mean and which source is authoritative; what RAG alone can't give you.
 
@@ -100,7 +100,7 @@ governance around them. Contributions welcome ([CONTRIBUTING](CONTRIBUTING.md)).
 - [Mem0](https://github.com/mem0ai/mem0) — a memory layer for agents (extraction, storage, retrieval of long-term facts).
 - [Letta (formerly MemGPT)](https://github.com/letta-ai/letta) — agents with self-editing long-term memory.
 - [Zep](https://github.com/getzep/zep) — a memory server for agents with temporal knowledge graphs.
-- [cognee](https://github.com/topoteretes/cognee) — memory as a knowledge graph + vector store ("second brain" for agents).
+- [cognee](https://github.com/topoteretes/cognee) — memory as a knowledge graph + vector store ("second brain" for agents). ⚠️ [telemetry on by default](#telemetry-check), including a persistent machine id: `TELEMETRY_DISABLED=1`.
 - **Enterprise memory** — shared, governed, auditable memory across teams and agents; treat it as a *protected asset* (poisoning + access control matter).
 
 ## Databases & vector stores
@@ -109,7 +109,7 @@ governance around them. Contributions welcome ([CONTRIBUTING](CONTRIBUTING.md)).
 
 ## Coding agents, code & infra
 - [Aider](https://github.com/Aider-AI/aider) — AI pair programming in the terminal.
-- [OpenHands](https://github.com/All-Hands-AI/OpenHands) — an autonomous software-engineering agent platform.
+- [OpenHands](https://github.com/All-Hands-AI/OpenHands) — an autonomous software-engineering agent platform. ⚠️ [sends an install event by default](#telemetry-check), without asking.
 - *(Coding agents have real blast radius on a dev machine and in CI — see [guardrails](#guardrails--protection) and [access control](#access-control-rbac--abac).)*
 
 ---
@@ -160,10 +160,10 @@ governance around them. Contributions welcome ([CONTRIBUTING](CONTRIBUTING.md)).
 ## Evaluation, judges & verification
 - [Microsoft PyRIT](https://github.com/Azure/PyRIT) — red-teaming toolkit for generative AI.
 - [garak](https://github.com/NVIDIA/garak) — LLM vulnerability scanner ("nmap for LLMs").
-- [promptfoo](https://github.com/promptfoo/promptfoo) — eval + red-team harness for prompts, models, and RAG.
-- [DeepEval](https://github.com/confident-ai/deepeval) — unit-test-style LLM evaluation.
-- [RAGAS](https://github.com/explodinggradients/ragas) — RAG-specific evaluation metrics.
-- [Giskard](https://github.com/Giskard-AI/giskard) — testing & scanning for ML/LLM systems.
+- [promptfoo](https://github.com/promptfoo/promptfoo) — eval + red-team harness for prompts, models, and RAG. ⚠️ [telemetry on by default](#telemetry-check) (PostHog): `PROMPTFOO_DISABLE_TELEMETRY=1`.
+- [DeepEval](https://github.com/confident-ai/deepeval) — unit-test-style LLM evaluation. ⚠️ [telemetry on by default](#telemetry-check) (PostHog): `DEEPEVAL_TELEMETRY_OPT_OUT=YES`.
+- [RAGAS](https://github.com/explodinggradients/ragas) — RAG-specific evaluation metrics. ⚠️ [telemetry on by default](#telemetry-check): `RAGAS_DO_NOT_TRACK=true`.
+- [Giskard](https://github.com/Giskard-AI/giskard) — testing & scanning for ML/LLM systems. ⚠️ [telemetry on by default](#telemetry-check) (PostHog): `GISKARD_TELEMETRY_DISABLED=true`.
 - **LLM-as-judge / verifier ("jev")** — a separate model or deterministic check that grades output; the loop should complete on *external evidence*, not the model's say-so.
 
 ## Observability, monitoring & tracing
@@ -194,3 +194,11 @@ governance around them. Contributions welcome ([CONTRIBUTING](CONTRIBUTING.md)).
 
 *A maintained seed — curated from practitioner research and grown weekly. This is a map of a fast-
 moving field; open a PR to add what matters and fix what's stale.*
+
+## Telemetry check
+
+Tools marked ⚠️ send usage data to their maker **by default**. We found this by reading each project's source on
+2026-10-02, without installing anything. That matters for the control half of this list: in a regulated or air-gapped
+environment, a default-on analytics call is data leaving the boundary. Each mark gives the documented opt-out
+variable. Set it before first run, block the endpoint at egress, or choose an alternative. Behaviour can change between
+releases, so re-check the version you install. Tools without a mark haven't necessarily been checked.
